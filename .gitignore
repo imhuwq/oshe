@@ -4,3 +4,6 @@
 # for test file
 te.*
 project
+
+# for python
+*.pyc
