@@ -2,9 +2,16 @@ from oshe.task import TaskBase
 
 
 class Crawl(TaskBase):
+    headers = None
+    cookies = None
+
     def __init__(self, headers=None, cookies=None, auth=None):
-        self.headers = headers
-        self.cookies = cookies
+        if headers is not None:
+            self.headers = headers
+
+        if cookies is not None:
+            self.cookies = cookies
+
         self.auth = auth
 
     def get(self, url, **kwargs):
@@ -26,4 +33,4 @@ class Crawl(TaskBase):
         pass
 
     def run(self, *args, **kwargs):
-        self.get(*args, **kwargs)
+        raise NotImplementedError

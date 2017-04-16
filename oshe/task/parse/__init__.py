@@ -31,8 +31,8 @@ class ParseBase(TaskBase):
         result = [string for string in strings if string_is_meaningful(string)]
         return result
 
-    def parse(self, data, *args, **kwargs):
+    def parse(self, data):
         raise NotImplementedError
 
     def run(self, *args, **kwargs):
-        self.parse(*args, **kwargs)
+        return self.parse(*args, **kwargs)

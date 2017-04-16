@@ -9,7 +9,14 @@ SOURCE_DIR = CURRENT_DIR
 DEPLOY_DIR = os.path.join(CURRENT_DIR, "deploy")
 TEMPLATE_DIR = os.path.join(CURRENT_DIR, "template")
 TEST_DIR = os.path.join(CURRENT_DIR, "test")
-SUB_TESTS_DIRS = [item for item in os.listdir(TEST_DIR) if os.path.isdir(os.path.join(TEST_DIR, item))]
+SUB_TESTS_DIRS = [item for item in os.listdir(TEST_DIR)
+                  if os.path.isdir(os.path.join(TEST_DIR, item))]
+
+PROJECT_DIR = os.path.join(os.getcwd(), "project")
+if os.path.exists(PROJECT_DIR):
+    APP_DIRS = [item for item in os.listdir(PROJECT_DIR)
+                if os.path.isdir(os.path.join(PROJECT_DIR, item))
+                and not item.startswith("_")]
 
 
 @click.group()
@@ -36,9 +43,8 @@ def init():
 @oshe.command()
 @click.argument("name")
 def create(name):
-    project_dir = os.path.join(os.getcwd(), "project")
-    if os.path.exists(project_dir):
-        app_dir = os.path.join(project_dir, name)
+    if os.path.exists(PROJECT_DIR):
+        app_dir = os.path.join(PROJECT_DIR, name)
         if not os.path.exists(app_dir):
             click.echo("creating app: %s" % name)
             shutil.copytree(os.path.join(TEMPLATE_DIR, "demo"), os.path.join(project_dir, name))
@@ -55,11 +61,23 @@ def deploy(environment):
 
 
 @oshe.command()
-def run():
+@click.option("queue", "-Q", help="queue to run", default="all")
+@click.option("loglevel", "-L", help="log level to run with", default="info")
+def worker(queue, loglevel):
     click.echo("starting celery...")
     python_bin_dir = os.path.dirname(sys.executable)
     celery_path = os.path.join(python_bin_dir, "celery")
-    os.system("%s -A project.celery_app:celery_app worker -l info" % celery_path)
+    if queue != "all":
+        os.system("%s -A project.celery_app:celery_app worker -Q %s -l %s" % (celery_path, queue, loglevel))
+    else:
+        os.system("%s -A project.celery_app:celery_app worker -l %s" % (celery_path, loglevel))
+
+
+@oshe.command()
+def beat():
+    python_bin_dir = os.path.dirname(sys.executable)
+    celery_path = os.path.join(python_bin_dir, "celery")
+    os.system("%s -A project.celery_app:celery_app beat" % celery_path)
 
 
 @oshe.command()

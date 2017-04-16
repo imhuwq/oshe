@@ -32,6 +32,4 @@ class SqlalchemyStore(Store):
         self.Model.metadata.drop_all(self.engine)
 
     def store(self, **kwargs):
-        db_row = self.db_table(**kwargs)
-        self.session.add(db_row)
-        self.session.commit()
+        raise NotImplementedError

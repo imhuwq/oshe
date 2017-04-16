@@ -4,6 +4,9 @@
 # for test file
 te.*
 project
+data
+celerybeat-schedule.*
 
 # for python
 *.pyc
+
