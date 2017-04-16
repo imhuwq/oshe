@@ -1,4 +1,5 @@
 import os
+import sys
 
 import click
 import shutil
@@ -55,7 +56,10 @@ def deploy(environment):
 
 @oshe.command()
 def run():
-    click.echo("running")
+    click.echo("starting celery...")
+    python_bin_dir = os.path.dirname(sys.executable)
+    celery_path = os.path.join(python_bin_dir, "celery")
+    os.system("%s -A project.celery_app:celery_app worker -l info" % celery_path)
 
 
 @oshe.command()

@@ -1,8 +1,11 @@
 from celery import Celery
 
+from .config import Config
 from .demo.task.sample_task import CrawlTask, ParseTask, StoreTask
 
 celery_app = Celery("tasks")
+celery_app.conf.broker_url = Config.REDIS_BROKER_URL
+celery_app.conf.result_backend = Config.REDIS_RESULT_BACKEND
 
 
 @celery_app.task
