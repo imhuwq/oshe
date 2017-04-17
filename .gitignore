@@ -6,7 +6,10 @@ te.*
 project
 data
 celerybeat-schedule.*
+celerybeat.pid
 
 # for python
 *.pyc
 
+# for
+oshe.egg-info
