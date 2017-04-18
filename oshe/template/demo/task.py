@@ -3,10 +3,8 @@ import json
 from oshe.task.crawl.requests_crawl import RequestsCrawl
 from oshe.task.parse.xpath_parse import XpathParse
 from oshe.task.store.sa_store import SqlalchemyStore
-
 from project.config import Config
-
-from project.demo.model.sample_model import Data
+from project.demo.model import Data
 
 
 class CrawlTask(RequestsCrawl):
@@ -65,4 +63,3 @@ class StoreTask(SqlalchemyStore):
         row = self.db_table(collection=collection, identity=identity, data=data)
         self.session.add(row)
         self.session.commit()
-
